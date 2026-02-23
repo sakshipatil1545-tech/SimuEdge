@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimuEdge Technologies | glass · engineering</title>
+
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font: Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- AOS (Animate on Scroll) Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            montserrat: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            primary: '#2c3e50',      
+            custom: { 500: '#2c3e50' }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out forwards',
+            'slide-up': 'slideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards',
+            'slide-left': 'slideLeft 0.8s ease-out forwards',
+            'slide-right': 'slideRight 0.8s ease-out forwards',
+            'zoom-in': 'zoomIn 0.5s ease-out forwards',
+            'float': 'float 3s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            slideLeft: { '0%': { opacity: '0', transform: 'translateX(-30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+            slideRight: { '0%': { opacity: '0', transform: 'translateX(30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+            zoomIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+            float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-10px)' } }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-light: #f8fafc;          /* soft off-white background */
+      --card-light: #ffffff;         /* pure white for glass base */
+      --text-dark: #1e293b;          /* slate-800 for primary text */
+      --text-muted: #475569;         /* slate-600 for secondary */
+      --accent-slate: #3b7c9c;       /* professional slate blue */
+      --accent-light: #6b9fc7;       /* lighter blue for highlights */
+      --border-soft: #e2e8f0;        /* slate-200 for borders */
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(59, 124, 156, 0.2);
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.08);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px) saturate(160%);
+      -webkit-backdrop-filter: blur(10px) saturate(160%);
+      border: 1px solid rgba(59, 124, 156, 0.15);
+      border-radius: 1.75rem;
+      transition: all 0.25s ease;
+    }
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: var(--accent-slate);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px -10px rgba(59, 124, 156, 0.2);
+    }
+    .glass-button {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(59, 124, 156, 0.3);
+      transition: all 0.2s;
+    }
+    .glass-button:hover {
+      background: rgba(59, 124, 156, 0.15);
+      border-color: var(--accent-slate);
+    }
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+    .glass-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+    .custom-list li {
+      position: relative;
+      padding-left: 1.2rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-muted);
+    }
+    .custom-list li::before {
+      content: "•";
+      color: var(--accent-slate);
+      position: absolute;
+      left: 0;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    [data-aos] {
+      opacity: 0;
+      transition-property: opacity, transform;
+    }
+    [data-aos].aos-animate {
+      opacity: 1;
+    }
+
+    /* accent color utilities */
+    .text-accent {
+      color: var(--accent-slate);
+    }
+    .text-light-accent {
+      color: var(--accent-light);
+    }
+    .border-accent {
+      border-color: var(--accent-slate);
+    }
+    .bg-accent {
+      background-color: var(--accent-slate);
+    }
+    .hover\:bg-accent:hover {
+      background-color: var(--accent-slate);
+    }
+    .hover\:border-accent:hover {
+      border-color: var(--accent-slate);
+    }
+    h1, h2, h3, h4 {
+      color: var(--text-dark);
+    }
+    p {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body class="font-montserrat antialiased relative min-h-screen">
+
+<!-- glass orbs background - soft light palette -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+  <div class="glass-orb w-[30rem] h-[30rem] bg-[#3b7c9c]/20 top-[-5%] left-[-5%] animate-pulse"></div>
+  <div class="glass-orb w-[40rem] h-[40rem] bg-[#6b9fc7]/20 bottom-[-10%] right-[-5%] animate-float"></div>
+  <div class="glass-orb w-[25rem] h-[25rem] bg-[#94a3b8]/20 top-[40%] right-[15%]"></div>
+  <div class="glass-orb w-[20rem] h-[20rem] bg-[#b8d8f0]/30 bottom-[20%] left-[10%] animate-pulse"></div>
+</div>
+
+<!-- mobile menu script (unchanged logic) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      offset: 50,
+      delay: 50
+    });
+  });
+</script>
+
+<!-- ========== GLASS NAVBAR ========== -->
+<header class="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-7xl z-50">
+  <div class="glass-panel px-6 py-3 flex items-center justify-between text-gray-800 border border-[#3b7c9c]/20">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-white/60 backdrop-blur-sm flex items-center justify-center font-extrabold text-xl border border-[#3b7c9c]/30" style="color: var(--accent-slate);">SE</div>
+      <div>
+        <h1 class="text-lg font-bold text-gray-800">SimuEdge Technologies</h1>
+        <p class="text-xs" style="color: var(--accent-slate);">Engineering Simulation Experts</p>
+      </div>
+    </div>
+    <nav class="hidden md:flex gap-4 lg:gap-8 text-sm font-medium text-gray-700">
+      <a class="hover:text-[#3b7c9c] transition-colors duration-300" href="#">Home</a>
+      <a class="hover:text-[#3b7c9c] transition-colors duration-300" href="#about">About</a>
+      <a class="hover:text-[#3b7c9c] transition-colors duration-300" href="#services">Services</a>
+      <a class="hover:text-[#3b7c9c] transition-colors duration-300" href="#industries">Industries</a>
+      <a class="hover:text-[#3b7c9c] transition-colors duration-300" href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="hidden md:block glass-button px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-800 shadow-lg hover:scale-105 transition-all duration-300 border border-[#3b7c9c]/30">Get Started</a>
+    <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full glass-panel mt-2 p-4 flex flex-col gap-2 border border-white/20">
+      <a class="hover:bg-white/30 px-4 py-2 rounded-xl transition text-gray-800" href="#">Home</a>
+      <a class="hover:bg-white/30 px-4 py-2 rounded-xl transition text-gray-800" href="#about">About</a>
+      <a class="hover:bg-white/30 px-4 py-2 rounded-xl transition text-gray-800" href="#services">Services</a>
+      <a class="hover:bg-white/30 px-4 py-2 rounded-xl transition text-gray-800" href="#industries">Industries</a>
+      <a class="hover:bg-white/30 px-4 py-2 rounded-xl transition text-gray-800" href="#contact">Contact</a>
+      <a href="#contact" class="glass-button px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-800 text-center border border-[#3b7c9c]/30">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative pt-48 pb-28 overflow-hidden z-10">
+  <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+    <div class="animate-slide-left">
+      <span class="inline-block mb-4 px-3 py-1 text-xs font-semibold rounded-full glass-panel text-gray-700 border border-[#3b7c9c]/30 bg-white/40">Next‑Gen Simulation Solutions</span>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-tight mt-6 text-gray-800">
+        Transforming<br>Engineering Through<br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r" style="background-image: linear-gradient(to right, var(--accent-slate), #2c3e50);">Advanced Simulation</span>
+      </h2>
+      <p class="mt-6 text-base sm:text-lg text-gray-600 max-w-xl">
+        Transforming industries with advanced simulation technologies, including CAD and Computer-Aided Engineering, to enhance engineering design and ensure durability through FEA.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4">
+        <a href="#contact" class="glass-button px-6 py-3 rounded-lg font-semibold text-gray-800 shadow-xl hover:scale-105 transition-all duration-300 text-center border border-[#3b7c9c]/30 bg-white/50">Start a Project</a>
+        <a href="#services" class="glass-button px-6 py-3 rounded-lg font-semibold text-gray-800 border border-[#3b7c9c]/30 hover:bg-white/40 transition-all duration-300 text-center">Explore Services</a>
+      </div>
+    </div>
+    <div class="relative animate-zoom-in">
+      <div class="glass-panel p-2 border-[#3b7c9c]/30">
+        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80" class="w-full h-full rounded-[1.8rem] opacity-90" />
+      </div>
+      <div class="absolute -bottom-8 -left-8 glass-panel px-6 py-4 border-[#3b7c9c]/30 bg-white/60 backdrop-blur-md">
+        <p class="text-sm" style="color: var(--accent-slate);">Industries Served</p>
+        <p class="font-bold text-lg text-gray-800">Automotive · Industrial · Electronics</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section id="about" class="relative py-28 z-10">
+  <div class="max-w-5xl mx-auto px-6 text-center">
+    <div class="glass-panel p-12 md:p-16 border-[#3b7c9c]/30" data-aos="fade-up" data-aos-delay="100">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-800">About <span style="color: var(--accent-slate);">SimuEdge Technologies</span></h2>
+      <div class="w-24 h-1 mx-auto my-6 rounded-full" style="background-color: var(--accent-slate);"></div>
+      <p class="mt-6 text-base sm:text-lg leading-relaxed text-gray-600">
+        At SimuEdge Technologies, we specialize in Engineering Design (CAD) and Computer-Aided Engineering (CAE) simulations, delivering advanced and reliable solutions across diverse industries including Automotive, Industrial, Electronics, FMCG, FMEG, Agriculture, Railway, Heavy Industry, Chemical, Pharma, Packaging, and Academia.
+      </p>
+      <p class="mt-4 text-base sm:text-lg leading-relaxed text-gray-600">
+        Our core strength lies in Finite Element Analysis (FEA) and durability assessments, enabling businesses to optimize product designs, enhance structural integrity, reduce development costs, and accelerate time-to-market. By leveraging cutting-edge simulation technologies, we minimize the need for costly physical prototypes while ensuring accuracy, safety, and performance.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section id="services" class="relative py-32 z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-10" data-aos="fade-up">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-800">Our <span style="color: var(--accent-slate);">Engineering Services</span></h2>
+      <p class="mt-5 text-lg text-gray-600 max-w-3xl mx-auto">
+        At SimuEdge Technologies, we deliver advanced CAD and CAE-driven engineering solutions that help organizations design smarter, validate faster, and manufacture efficiently. Our services are focused on performance optimization, durability enhancement, cost reduction, and accelerated product development.
+      </p>
+    </div>
+
+    <!-- CAD Services card expanded -->
+    <div class="glass-card p-6 mb-8" data-aos="fade-right" data-aos-delay="100">
+      <h3 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2"><span class="text-3xl">📐</span> 1. CAD Services</h3>
+      <p class="text-gray-600 mb-4">We transform ideas into precise digital models ready for simulation and manufacturing.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-semibold mb-2" style="color: var(--accent-slate);">Our Capabilities:</h4>
+          <ul class="text-sm custom-list">
+            <li>3D Modeling & Assembly Design</li>
+            <li>2D Drafting & Manufacturing Drawings</li>
+            <li>Product Concept Development</li>
+            <li>Design Optimization & Modification</li>
+            <li>GD&T & Technical Documentation</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2" style="color: var(--accent-slate);">Benefits:</h4>
+          <p class="text-gray-600">Improved design accuracy, reduced errors, and seamless integration with CAE validation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAE intro -->
+    <div class="text-center my-12" data-aos="zoom-in">
+      <span class="glass-panel px-6 py-2 text-gray-800 text-xl font-semibold inline-block border-[#3b7c9c]/30">Computer-Aided Engineering (CAE) Services</span>
+      <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Our CAE services enable virtual testing and performance validation before physical prototyping, reducing risks and development costs.</p>
+    </div>
+
+    <!-- Rest of services in a grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- 2. Structural Analysis -->
+      <div class="glass-card p-6" data-aos="fade-up" data-aos-delay="150">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">⚙️</span> 2. Structural Analysis</h3>
+        <p class="text-gray-600 text-sm mb-2">Evaluate strength, stiffness, and durability under real-world loading conditions.</p>
+        <ul class="text-sm custom-list mb-2">
+          <li>Static & Dynamic Analysis</li><li>Impact & Crash Simulations</li><li>Fatigue & Fracture Analysis</li><li>Nonlinear Analysis</li><li>Multibody Dynamics</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-1"><span class="font-semibold" style="color: var(--accent-slate);">Applications:</span> Automotive components, industrial machinery, heavy equipment, structural systems.</p>
+      </div>
+      <!-- 3. Thermal & Fluid Flow -->
+      <div class="glass-card p-6" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">🔥</span> 3. Thermal & Fluid Flow</h3>
+        <p class="text-gray-600 text-sm mb-2">Ensure effective heat dissipation and optimized fluid behavior.</p>
+        <ul class="text-sm custom-list mb-2">
+          <li>Heat Transfer & Cooling Optimization</li><li>CFD (Computational Fluid Dynamics)</li><li>HVAC Simulations</li><li>Conjugate Heat Transfer (CHT)</li><li>Internal & External Flow Analysis</li>
+        </ul>
+        <p class="text-xs text-gray-500"><span class="font-semibold" style="color: var(--accent-slate);">Applications:</span> Electronics cooling, industrial systems, automotive thermal management.</p>
+      </div>
+      <!-- 4. Electromagnetic -->
+      <div class="glass-card p-6" data-aos="fade-up" data-aos-delay="250">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">⚡</span> 4. Electromagnetic Simulations</h3>
+        <p class="text-gray-600 text-sm mb-2">Analyze electromagnetic performance and electrical reliability.</p>
+        <ul class="text-sm custom-list mb-2">
+          <li>PCB Thermal & Electrical Analysis</li><li>Antenna & Wireless Charging Simulation</li><li>Electric Motor & Actuator Analysis</li><li>Electromagnetic Field Distribution</li>
+        </ul>
+        <p class="text-xs text-gray-500"><span class="font-semibold" style="color: var(--accent-slate);">Applications:</span> Electronics, EV systems, embedded systems.</p>
+      </div>
+      <!-- 5. NVH Analysis -->
+      <div class="glass-card p-6" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">🎵</span> 5. NVH Analysis</h3>
+        <p class="text-gray-600 text-sm mb-2">Improve acoustic comfort and structural vibration performance.</p>
+        <ul class="text-sm custom-list mb-2">
+          <li>Acoustic Simulation</li><li>Vibration Analysis & Damping</li><li>Modal & Harmonic Analysis</li><li>Vehicle Cabin Noise Study</li><li>Structural-Borne Noise Reduction</li>
+        </ul>
+        <p class="text-xs text-gray-500"><span class="font-semibold" style="color: var(--accent-slate);">Applications:</span> Automotive, industrial equipment, consumer products.</p>
+      </div>
+      <!-- 6. Multiphysics -->
+      <div class="glass-card p-6" data-aos="fade-up" data-aos-delay="350">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">🔁</span> 6. Multiphysics & Coupled Simulations</h3>
+        <p class="text-gray-600 text-sm mb-2">Simulate interaction between multiple physical phenomena for accurate system behavior prediction.</p>
+        <ul class="text-sm custom-list mb-2">
+          <li>Structural-Thermal Coupling</li><li>Fluid-Structure Interaction (FSI)</li><li>Electromagnetic-Structural Coupling</li><li>Piezoelectric & Thermal Expansion Analysis</li><li>Smart Materials & MEMS Modeling</li>
+        </ul>
+        <p class="text-xs text-gray-500"><span class="font-semibold" style="color: var(--accent-slate);">Applications:</span> Advanced engineering systems, high-performance components.</p>
+      </div>
+      <!-- 7. Digital Twin -->
+      <div class="glass-card p-6" data-aos="fade-up" data-aos-delay="400">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">👥</span> 7. Digital Twin & Virtual Prototyping</h3>
+        <p class="text-gray-600 text-sm mb-2">Enable real-time performance monitoring and predictive engineering.</p>
+        <ul class="text-sm custom-list mb-2">
+          <li>Real-Time Digital Twin Models</li><li>System-Level Simulation</li><li>Performance Optimization</li><li>Process Simulation</li><li>Predictive Maintenance Modeling</li>
+        </ul>
+        <p class="text-xs text-gray-500"><span class="font-semibold" style="color: var(--accent-slate);">Benefits:</span> Reduced downtime, better decision-making, smarter manufacturing integration.</p>
+      </div>
+      <!-- 8. DEM -->
+      <div class="glass-card p-6 md:col-span-2" data-aos="fade-up" data-aos-delay="450">
+        <h3 class="text-xl font-bold text-gray-800 mb-2 flex gap-2"><span class="text-2xl">🧪</span> 8. DEM (Discrete Element Method) – Pharmaceutical & Bulk Material Handling</h3>
+        <p class="text-gray-600 text-sm mb-2">Specialized simulation for granular materials and powder processing industries.</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <ul class="text-sm custom-list">
+            <li>Powder Flow Simulation</li><li>Granular Mixing Analysis</li><li>Tablet Coating & Compression Study</li><li>Silo & Hopper Design Optimization</li><li>Wear & Erosion Modeling using FEA</li>
+          </ul>
+          <p class="text-sm text-gray-600"><span class="font-semibold" style="color: var(--accent-slate);">Applications:</span> Pharma, chemical processing, packaging, bulk material industries.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- why our services bullet list -->
+    <div class="glass-panel p-8 mt-12 border-[#3b7c9c]/30" data-aos="zoom-in-up" data-aos-delay="200">
+      <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Why Our Engineering Services?</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
+        <span class="flex items-center gap-2">✔ High-Accuracy Simulation Models</span>
+        <span class="flex items-center gap-2">✔ AI-Driven Predictive Analysis</span>
+        <span class="flex items-center gap-2">✔ Industry-Specific Custom Solutions</span>
+        <span class="flex items-center gap-2">✔ Reduced Physical Prototyping Costs</span>
+        <span class="flex items-center gap-2">✔ Faster Time-to-Market</span>
+        <span class="flex items-center gap-2">✔ End-to-End Engineering Support</span>
+      </div>
+      <p class="text-center mt-6" style="color: var(--accent-slate);">Design Smart. Validate Virtually. Perform Reliably.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHY CHOOSE SIMUEDGE ========== -->
+<section class="relative py-32 overflow-hidden z-10">
+  <div class="relative max-w-7xl mx-auto px-6">
+    <div class="text-center mb-12" data-aos="fade-down">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-wide">Why <span style="color: var(--accent-slate);">Choose SimuEdge Technologies</span></h2>
+      <p class="mt-5 text-lg text-gray-600 max-w-3xl mx-auto">
+        We go beyond traditional engineering services. We deliver intelligent, simulation-driven solutions that empower industries to innovate faster, reduce risks, and achieve superior product performance.
+      </p>
+    </div>
+
+    <!-- cards with detailed content -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Innovative & Cost-Effective Simulations -->
+      <div class="glass-card p-8" data-aos="flip-left" data-aos-delay="100">
+        <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center mb-6 text-2xl" style="color: var(--accent-slate);">💰</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Innovative & Cost-Effective Simulations</h3>
+        <p class="text-gray-600 text-sm leading-relaxed mb-3">High-accuracy engineering simulations powered by advanced CAE tools replace physical testing, reducing development costs and time-to-market.</p>
+        <ul class="text-sm custom-list">
+          <li>Reduced physical prototyping expenses</li><li>Faster design iterations</li><li>Early-stage failure detection</li><li>Improved product reliability</li>
+        </ul>
+      </div>
+      <!-- Advanced CAE & AI-Driven Engineering -->
+      <div class="glass-card p-8" data-aos="flip-right" data-aos-delay="150">
+        <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center mb-6 text-2xl" style="color: var(--accent-slate);">🤖</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Advanced CAE & AI-Driven Engineering</h3>
+        <p class="text-gray-600 text-sm leading-relaxed mb-3">We integrate AI and machine learning-based predictive modeling into simulation workflows for smarter design decisions.</p>
+        <ul class="text-sm custom-list">
+          <li>Data-driven design optimization</li><li>Predictive performance analysis</li><li>Improved durability & lifecycle estimation</li><li>Intelligent engineering decision-making</li>
+        </ul>
+      </div>
+      <!-- Industry-Specific Expertise -->
+      <div class="glass-card p-8" data-aos="flip-left" data-aos-delay="200">
+        <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center mb-6 text-2xl" style="color: var(--accent-slate);">🏭</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Industry-Specific Expertise</h3>
+        <p class="text-gray-600 text-sm leading-relaxed">Hands-on experience across Automotive, Industrial, Electronics, FMCG, Agriculture, Railway, Pharma, Heavy Industry, Chemical, Packaging, Academia. Simulations aligned with industry standards and compliance frameworks.</p>
+      </div>
+      <!-- Digital Twin & Smart Manufacturing -->
+      <div class="glass-card p-8" data-aos="flip-right" data-aos-delay="250">
+        <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center mb-6 text-2xl" style="color: var(--accent-slate);">📈</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3">Digital Twin & Smart Manufacturing</h3>
+        <p class="text-gray-600 text-sm leading-relaxed mb-3">Support Industry 4.0 transition with Digital Twin and virtual prototyping strategies.</p>
+        <ul class="text-sm custom-list">
+          <li>Real-time performance monitoring</li><li>Predictive maintenance insights</li><li>Optimized manufacturing processes</li><li>Improved asset lifecycle management</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Commitment box -->
+    <div class="glass-panel p-8 mt-10 border-[#3b7c9c]/30" data-aos="fade-up" data-aos-delay="300">
+      <h3 class="text-2xl font-bold text-gray-800 mb-3 text-center">Our Commitment to Excellence</h3>
+      <div class="flex flex-wrap justify-center gap-4 text-gray-600 text-sm">
+        <span class="bg-white/40 px-3 py-1 rounded-full">🔒 Confidential data handling</span>
+        <span class="bg-white/40 px-3 py-1 rounded-full">⏱️ Timely project execution</span>
+        <span class="bg-white/40 px-3 py-1 rounded-full">🔧 End-to-end lifecycle support</span>
+        <span class="bg-white/40 px-3 py-1 rounded-full">🤝 Transparent collaboration</span>
+      </div>
+      <p class="text-center text-gray-700 mt-6">Engineering Precision. Digital Intelligence. Sustainable Performance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== INDUSTRIES WE SERVE ========== -->
+<section id="industries" class="relative py-28 overflow-hidden z-10">
+  <div class="relative max-w-7xl mx-auto px-6">
+    <div class="text-center mb-12" data-aos="fade-down">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-wide text-gray-800">INDUSTRIES WE SERVE</h2>
+      <p class="mt-4 text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
+        Delivering CAD & CAE-driven solutions that enhance product performance, improve durability, and accelerate innovation.
+      </p>
+    </div>
+
+    <!-- industries cards with expanded info -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Automotive -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="50">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">🚗</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Automotive</h3>
+        <ul class="text-xs custom-list">
+          <li>Structural DOE through simulations</li><li>NVH analysis</li><li>Crash & Impact simulations</li><li>Thermal management</li><li>Fatigue & durability evaluation</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Improved safety, comfort, extended lifespan.</p>
+      </div>
+      <!-- Industrial -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="100">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">🏭</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Industrial</h3>
+        <ul class="text-xs custom-list">
+          <li>Structural strength analysis</li><li>Vibration & modal analysis</li><li>Multibody dynamics</li><li>Equipment durability optimization</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Increased efficiency, reduced downtime.</p>
+      </div>
+      <!-- Electronics -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="150">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">💻</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Electronics</h3>
+        <ul class="text-xs custom-list">
+          <li>PCB thermal management</li><li>CFD-based flow analysis</li><li>Heat dissipation optimization</li><li>Electromagnetic performance</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Enhanced reliability, reduced overheating.</p>
+      </div>
+      <!-- FMCG & FMEG -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="200">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">🛍</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">FMCG & FMEG</h3>
+        <ul class="text-xs custom-list">
+          <li>Material strength simulations</li><li>Structural integrity analysis</li><li>Drop & impact testing (virtual)</li><li>Packaging performance validation</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Stronger products, reduced wastage.</p>
+      </div>
+      <!-- Agriculture & Heavy Industry -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="250">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">🚜</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Agriculture & Heavy Industry</h3>
+        <ul class="text-xs custom-list">
+          <li>Durability analysis</li><li>Material optimization</li><li>Structural load validation</li><li>Fatigue life estimation</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Improved machinery lifespan.</p>
+      </div>
+      <!-- Railway & Chemical -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="300">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">🚆</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Railway & Chemical</h3>
+        <ul class="text-xs custom-list">
+          <li>Structural analysis</li><li>Fatigue & fracture analysis</li><li>Material flow simulations</li><li>Thermal & stress evaluation</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Compliance with safety standards.</p>
+      </div>
+      <!-- Pharma & Packaging -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="350">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">💊</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Pharma & Packaging</h3>
+        <ul class="text-xs custom-list">
+          <li>Granular flow simulations</li><li>Powder handling analysis</li><li>Tablet coating uniformity</li><li>Bulk material handling (DEM)</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Improved process consistency.</p>
+      </div>
+      <!-- Academia -->
+      <div class="glass-card p-6" data-aos="zoom-in" data-aos-delay="400">
+        <div class="text-3xl mb-3" style="color: var(--accent-slate);">🎓</div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Academia</h3>
+        <ul class="text-xs custom-list">
+          <li>Research collaborations</li><li>Innovation development projects</li><li>Prototype advancements</li><li>FEA-based validation for research</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2"><span style="color: var(--accent-slate);">Outcome:</span> Accelerated research development.</p>
+      </div>
+    </div>
+
+    <!-- closing line -->
+    <div class="text-center mt-12 glass-panel p-6 border-[#3b7c9c]/30" data-aos="fade-up">
+      <p class="text-gray-800 text-lg">Engineering Innovation Across Industries.</p>
+      <p class="text-gray-600 text-sm mt-2">✔ Improve product performance ✔ Enhance durability ✔ Reduce development time ✔ Enable data-driven decisions</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact" class="py-28 z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800">Contact Us</h2>
+      <p class="mt-4 text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
+        We believe in building strong and lasting partnerships. Whether you need CAD, CAE, FEA validation, or complete engineering support, our team is ready to assist.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-14 items-start">
+      <!-- left info with detailed contact -->
+      <div class="glass-panel p-10 border-[#3b7c9c]/30" data-aos="fade-right" data-aos-delay="100">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Better Yet, Visit Us in Person</h3>
+        <p class="text-gray-600 mb-6">We highly value direct interaction and technical discussions. Our experts are available during business hours to discuss CAD, structural, thermal, multiphysics, digital twin, and industry-specific challenges.</p>
+        <div class="flex gap-5 mb-7">
+          <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center text-xl" style="color: var(--accent-slate);">📍</div>
+          <div><h4 class="font-semibold text-gray-800">Office Address</h4><p class="text-gray-600 mt-1">SimuEdge Technologies<br>Ace Almighty by Jhamtani, Wakad<br>Pune, Maharashtra, India</p></div>
+        </div>
+        <div class="flex gap-5 mb-7">
+          <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center text-xl" style="color: var(--accent-slate);">⏰</div>
+          <div><h4 class="font-semibold text-gray-800">Business Hours</h4><p class="text-gray-600 mt-1">Monday – Friday: 9:00 AM – 5:00 PM<br>Saturday & Sunday: Closed (appointments recommended)</p></div>
+        </div>
+        <div class="flex gap-5">
+          <div class="w-12 h-12 rounded-xl bg-white/50 flex items-center justify-center text-xl" style="color: var(--accent-slate);">✉️</div>
+          <div><h4 class="font-semibold text-gray-800">Contact Information</h4><p class="text-gray-600 mt-1">Email: <a href="mailto:info@simuedge.com" class="font-medium" style="color: var(--accent-slate);">info@simuedge.com</a><br>Phone: +91 XXXXXXXXXX</p></div>
+        </div>
+      </div>
+
+      <!-- right form with extra text -->
+      <div class="glass-panel p-10 border-[#3b7c9c]/30 bg-white/50" data-aos="fade-left" data-aos-delay="150">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Let's Collaborate</h3>
+        <p class="text-gray-600 mb-4 text-sm">Whether you are a startup, manufacturer, or research institution, we're committed to accurate, reliable engineering solutions.</p>
+        <form class="space-y-6">
+          <input type="text" placeholder="Your Name" class="w-full rounded-xl px-5 py-4 bg-white/60 placeholder-gray-500 text-gray-800 border border-[#3b7c9c]/20">
+          <input type="email" placeholder="Your Email" class="w-full rounded-xl px-5 py-4 bg-white/60 placeholder-gray-500 text-gray-800 border border-[#3b7c9c]/20">
+          <textarea rows="4" placeholder="Your Message" class="w-full rounded-xl px-5 py-4 bg-white/60 placeholder-gray-500 text-gray-800 border border-[#3b7c9c]/20 resize-none"></textarea>
+          <button type="submit" class="w-full glass-button bg-white/60 text-gray-800 font-semibold py-4 rounded-xl hover:bg-[#3b7c9c]/20 transition-all duration-300 border border-[#3b7c9c]/30">Send Message</button>
+        </form>
+        <p class="text-center text-gray-500 text-xs mt-6">Engineering Precision. Digital Innovation. Reliable Performance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER with light palette -->
+<footer class="relative z-10 py-12 sm:py-16" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-top: 1px solid var(--accent-slate);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
+    <div class="flex flex-col gap-4">
+      <div class="w-12 h-12 rounded-lg bg-white/60 flex items-center justify-center font-bold text-lg backdrop-blur-sm" style="color: var(--accent-slate);">SE</div>
+      <h3 class="text-xl font-semibold text-gray-800">SimuEdge Technologies</h3>
+      <p class="text-gray-600 text-sm">Innovative Engineering Simulation Solutions<br>Transforming industries with advanced simulation technologies</p>
+    </div>
+    <div class="flex flex-col gap-2">
+      <h4 class="font-semibold mb-2" style="color: var(--accent-slate);">Quick Links</h4>
+      <a href="#" class="text-gray-600 hover:text-[#3b7c9c] transition">Home</a>
+      <a href="#about" class="text-gray-600 hover:text-[#3b7c9c] transition">About</a>
+      <a href="#services" class="text-gray-600 hover:text-[#3b7c9c] transition">Services</a>
+      <a href="#industries" class="text-gray-600 hover:text-[#3b7c9c] transition">Industries</a>
+      <a href="#contact" class="text-gray-600 hover:text-[#3b7c9c] transition">Contact</a>
+    </div>
+    <div class="flex flex-col gap-4">
+      <p class="text-gray-600 text-sm">© 2026 SimuEdge Technologies - All Rights Reserved.<br>Powered by Innovation & Excellence</p>
+      <p class="text-gray-700 text-sm" style="color: var(--accent-slate);">Follow us:</p>
+      <div class="flex gap-3">
+        <a href="#" class="w-8 h-8 rounded-full bg-white/60 text-gray-700 flex items-center justify-center hover:bg-white/80"><i class="fab fa-facebook-f text-sm"></i></a>
+        <a href="#" class="w-8 h-8 rounded-full bg-white/60 text-gray-700 flex items-center justify-center hover:bg-white/80"><i class="fab fa-twitter text-sm"></i></a>
+        <a href="#" class="w-8 h-8 rounded-full bg-white/60 text-gray-700 flex items-center justify-center hover:bg-white/80"><i class="fab fa-linkedin-in text-sm"></i></a>
+        <a href="#" class="w-8 h-8 rounded-full bg-white/60 text-gray-700 flex items-center justify-center hover:bg-white/80"><i class="fab fa-instagram text-sm"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
